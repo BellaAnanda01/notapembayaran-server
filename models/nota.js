@@ -41,6 +41,10 @@ const notaSchema = mongoose.Schema({
     type: String,
     default: ""
   },
+  kategoriBiaya: {
+    type: String,
+    default: ""
+  },
   namaFile: {
     type: String,
     default: ""
