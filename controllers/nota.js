@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 import NotaModal from "../models/nota.js"
 
-export const createNota = async (req, res) => {
-    const tanggal = new Date().toISOString()
-    const nota = req.body;
-    const newNota = new NotaModal({
-      ...nota,
-      // createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      noNota: nota.createdAt !== undefined ? `${("00" + (await NotaModal.countDocuments({
+export const createNota = async(req, res) => {
+        const tanggal = new Date().toISOString()
+        const nota = req.body;
+        const newNota = new NotaModal({
+                    ...nota,
+                    // createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    noNota: nota.createdAt !== undefined ? `${("00" + (await NotaModal.countDocuments({
         createdAt: {
           $gte: `${nota.createdAt.slice(0,4)}-01-01T00:00:00.000Z`,
           $lt: `${nota.createdAt.slice(0,4)}-12-31T23:59:00.000Z`
@@ -63,14 +63,14 @@ export const getNota = async (req, res) => {
 
 export const updateNota = async (req, res) => {
   const { id } = req.params;
-  const { kepada, caraBayar, namaBank, cabang, noRek, atasNama, nominal, untuk, namaFile, status, noInvoice, diapproveOleh, dibayarOleh } = req.body;
+  const { kepada, caraBayar, namaBank, cabang, noRek, atasNama, nominal, untuk, kategoriBiaya, namaFile, status, noInvoice, diapproveOleh, dibayarOleh } = req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({ message: `No nota exist with id: ${id}` });
     }
 
     const updatedNota = {
-      kepada, caraBayar, namaBank, cabang, noRek, atasNama, nominal, untuk, namaFile, status, noInvoice, diapproveOleh, dibayarOleh,
+      kepada, caraBayar, namaBank, cabang, noRek, atasNama, nominal, untuk, kategoriBiaya, namaFile, status, noInvoice, diapproveOleh, dibayarOleh,
       updatedAt: new Date().toISOString(),
       hasilNominal: parseInt(nominal.slice(2).replaceAll(".","")),
       _id: id,
@@ -100,7 +100,7 @@ export const getNotasBySearch = async (req, res) => {
   try {
     let searchingby = new RegExp(searchQuery, "i");
     NotaModal.find({untuk:{$regex:searchingby}})
-    .select("_id kepada caraBayar namaBank cabang noRek atasNama nominal untuk namaFile name status noInvoice createdAt")
+    .select("_id kepada caraBayar namaBank cabang noRek atasNama nominal untuk kategoriBiaya namaFile name status noInvoice createdAt")
     .then(NotaModal => {
       res.json(NotaModal);
     })
@@ -131,7 +131,7 @@ export const getNotasByStatus = async (req, res) => {
   try {
     let theStatusQuery = new RegExp(statusQuery, "i");
     NotaModal.find({status:{$regex:theStatusQuery}})
-    .select("_id kepada caraBayar namaBank cabang noRek atasNama nominal untuk namaFile name status noInvoice createdAt")
+    .select("_id kepada caraBayar namaBank cabang noRek atasNama nominal untuk kategoriBiaya namaFile name status noInvoice createdAt")
     .then(NotaModal => {
       res.json(NotaModal);
     })
