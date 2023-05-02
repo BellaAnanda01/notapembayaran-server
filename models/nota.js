@@ -22,7 +22,7 @@ const notaSchema = mongoose.Schema({
     default: ""
   },
   noRek: {
-    type: Number,
+    type: String,
     default: ""
   },
   atasNama: {
